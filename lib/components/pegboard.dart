@@ -48,9 +48,6 @@ class Pegboard extends StatelessWidget {
               final selected = activeHoles.any(
                 (e) => e.position == pegHole.position,
               );
-              if (selected) {
-                var t = "";
-              }
               return GestureDetector(
                 onTap: () => onTapHole?.call(pegHole),
                 child: Padding(

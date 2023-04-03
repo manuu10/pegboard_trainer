@@ -3,7 +3,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:pegboard_trainer/components/pegboard.dart';
+import 'package:pegboard_trainer/components/train_config_bottom_sheet.dart';
+import 'package:pegboard_trainer/components/train_config_card.dart';
 import 'package:pegboard_trainer/model/peg_hole.dart';
+import 'package:pegboard_trainer/model/train_config.dart';
 
 class TrainPage extends StatefulWidget {
   const TrainPage({Key? key}) : super(key: key);
@@ -19,36 +22,27 @@ class _TrainPageState extends State<TrainPage> {
     PegHole(position: Vec2i(0, 3)),
     PegHole(position: Vec2i(0, 0)),
   ];
+  TrainConfig? train;
+  bool finished = false;
+  void onStart() async {
+    if (train == null) return;
+    holes.clear();
+    setState(() {
+      finished = false;
+    });
 
-  void onStart() {
-    Random rnd = new Random();
-    int iteration = 0;
-    Timer.periodic(Duration(milliseconds: 200), (timer) {
-      iteration++;
-      if (iteration > 100 || !mounted) {
-        timer.cancel();
-      }
-      PegHole pegHole;
-      int tries = 0;
-      while (true) {
-        int col = rnd.nextInt(8);
-        int row = rnd.nextInt(4);
-        pegHole = PegHole(position: Vec2i(col, row));
-        bool inList = holes.any((e) => e.position == pegHole.position);
-        if (!inList) {
-          break;
-        }
-        if (++tries > 20) {
-          break;
-        }
-      }
-
+    for (var h in train!.holes) {
+      if (!mounted) return;
       setState(() {
-        holes.add(pegHole);
+        holes.add(h);
         if (holes.length > 3) {
           holes.removeAt(0);
         }
       });
+      await Future.delayed(Duration(milliseconds: train!.timeForMoveInMs));
+    }
+    setState(() {
+      finished = true;
     });
   }
 
@@ -59,10 +53,28 @@ class _TrainPageState extends State<TrainPage> {
         Pegboard(
           activeHoles: holes,
         ),
+        if (finished) Text("Finished"),
+        if (train != null) const SizedBox(height: 20),
+        if (train != null) TrainConfigCard(config: train!),
+        if (train != null) const SizedBox(height: 20),
+        if (train != null)
+          ElevatedButton(
+            onPressed: onStart,
+            child: Text("Start Training"),
+          ),
         const SizedBox(height: 20),
         ElevatedButton(
-          onPressed: onStart,
-          child: Text("Start Training"),
+          onPressed: () async {
+            final res = await TrainConfigBottomSheet.show(context);
+            if (res != null) {
+              setState(() {
+                train = res;
+              });
+            }
+          },
+          child: Text(
+            "${train == null ? "Create New" : "Modify"} Configuration",
+          ),
         )
       ],
     );

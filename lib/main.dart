@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pegboard_trainer/app_router.dart';
 
 void main() {
@@ -10,10 +11,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final baseTheme = ThemeData.dark(useMaterial3: true);
+
     return MaterialApp.router(
       routerConfig: AppRouter.router,
       title: 'Flutter Demo',
-      theme: ThemeData.dark(useMaterial3: true),
+      theme: baseTheme.copyWith(
+        primaryColor: Color.fromARGB(255, 139, 40, 40),
+        scaffoldBackgroundColor: Colors.black,
+        textTheme: GoogleFonts.notoSansTextTheme(baseTheme.textTheme),
+      ),
     );
   }
 }
