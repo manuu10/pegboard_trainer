@@ -3,6 +3,9 @@ import 'dart:math';
 
 import 'package:pegboard_trainer/model/peg_hole.dart';
 
+import 'math/recti.dart';
+import 'math/vec2i.dart';
+
 class TrainConfig {
   final List<PegHole> holes;
   final int timeForMoveInMs;
@@ -10,6 +13,42 @@ class TrainConfig {
     required this.holes,
     required this.timeForMoveInMs,
   });
+
+  RectI get usedArea {
+    final area = RectI.zero;
+    if (holes.isEmpty) return area;
+    area.topLeft = holes.first.position.copy();
+    area.bottomRight = holes.first.position.copy();
+    for (int i = 1; i < holes.length; i++) {
+      final hole = holes[i];
+      if (hole.position.x < area.topLeft.x) {
+        area.topLeft.x = hole.position.x;
+      }
+      if (hole.position.y < area.topLeft.y) {
+        area.topLeft.y = hole.position.y;
+      }
+      if (hole.position.x > area.bottomRight.x) {
+        area.bottomRight.x = hole.position.x;
+      }
+      if (hole.position.y > area.bottomRight.y) {
+        area.bottomRight.y = hole.position.y;
+      }
+    }
+    return area;
+  }
+
+  Vec2i get longestMove {
+    var move = Vec2i.zero;
+    for (int i = 0; i < holes.length - 1; i++) {
+      final current = holes[i].position;
+      final next = holes[i + 1].position;
+      final dist = current.distanceTo(next);
+      if (dist > move.length()) {
+        move = next - current;
+      }
+    }
+    return move;
+  }
 
   static TrainConfig generate(RandomTrainConfig config, int timeForMoveInMs) {
     List<PegHole> temp = [];

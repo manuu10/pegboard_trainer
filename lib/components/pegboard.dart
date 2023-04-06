@@ -3,6 +3,9 @@ import 'package:pegboard_trainer/components/inset_box_decoration.dart';
 import 'package:pegboard_trainer/components/inset_box_shadow.dart';
 import 'package:pegboard_trainer/model/peg_hole.dart';
 
+import '../model/math/recti.dart';
+import '../model/math/vec2i.dart';
+
 class Pegboard extends StatelessWidget {
   const Pegboard({
     super.key,
@@ -10,11 +13,13 @@ class Pegboard extends StatelessWidget {
     this.onTapHole,
     this.columns = 8,
     this.rows = 4,
+    this.markedRegion,
   });
 
   final int columns;
   final int rows;
   final List<PegHole> activeHoles;
+  final RectI? markedRegion;
   final void Function(PegHole hole)? onTapHole;
 
   @override
