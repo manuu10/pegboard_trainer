@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pegboard_trainer/train_page.dart';
+import 'package:pegboard_trainer/pages/settings_page.dart';
+import 'package:pegboard_trainer/pages/train_page.dart';
 
 import 'navigation_wrapper_page.dart';
 
@@ -30,7 +31,7 @@ abstract class AppRouter {
           GoRoute(
             path: setting,
             pageBuilder: (context, state) =>
-                NoTransitionPage(child: Text("setting")),
+                NoTransitionPage(child: SettingsPage()),
           ),
         ],
       )

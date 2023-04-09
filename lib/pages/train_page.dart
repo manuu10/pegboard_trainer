@@ -8,7 +8,7 @@ import 'package:pegboard_trainer/components/train_config_card.dart';
 import 'package:pegboard_trainer/model/peg_hole.dart';
 import 'package:pegboard_trainer/model/train_config.dart';
 
-import 'model/math/vec2i.dart';
+import '../model/math/vec2i.dart';
 
 class TrainPage extends StatefulWidget {
   const TrainPage({Key? key}) : super(key: key);
