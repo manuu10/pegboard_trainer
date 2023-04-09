@@ -55,24 +55,30 @@ class Pegboard extends StatelessWidget {
               );
               return GestureDetector(
                 onTap: () => onTapHole?.call(pegHole),
-                child: Padding(
-                  padding: const EdgeInsets.all(6.0),
-                  child: Container(
-                    decoration: InsetBoxDecoration(
-                      shape: BoxShape.circle,
-                      color: selected
-                          ? const Color.fromARGB(255, 85, 255, 94)
-                          : const Color.fromARGB(121, 0, 0, 0),
-                      boxShadow: const [
-                        InsetBoxShadow(
-                          color: Color.fromARGB(255, 0, 0, 0),
-                          blurRadius: 15,
-                          spreadRadius: 5,
-                          inset: true,
-                        )
-                      ],
+                child: CustomPaint(
+                  painter:
+                      (markedRegion?.containsVec(pegHole.position) ?? false)
+                          ? CustomHolePainter()
+                          : null,
+                  child: Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: Container(
+                      decoration: InsetBoxDecoration(
+                        shape: BoxShape.circle,
+                        color: selected
+                            ? const Color.fromARGB(255, 85, 255, 94)
+                            : const Color.fromARGB(121, 0, 0, 0),
+                        boxShadow: const [
+                          InsetBoxShadow(
+                            color: Color.fromARGB(255, 0, 0, 0),
+                            blurRadius: 15,
+                            spreadRadius: 5,
+                            inset: true,
+                          )
+                        ],
+                      ),
+                      child: FittedBox(),
                     ),
-                    child: FittedBox(),
                   ),
                 ),
               );
@@ -81,5 +87,18 @@ class Pegboard extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class CustomHolePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final p = Paint()..color = Colors.red.withAlpha(150);
+    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), p);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
   }
 }

@@ -26,6 +26,8 @@ class _TrainPageState extends State<TrainPage> {
   ];
   TrainConfig? train;
   bool finished = false;
+  bool showUsedArea = false;
+
   void onStart() async {
     if (train == null) return;
     holes.clear();
@@ -48,16 +50,28 @@ class _TrainPageState extends State<TrainPage> {
     });
   }
 
+  void toggleUsedArea() {
+    setState(() {
+      showUsedArea = !showUsedArea;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
       children: [
         Pegboard(
           activeHoles: holes,
+          markedRegion: showUsedArea ? train?.usedArea : null,
         ),
         if (finished) Text("Finished"),
         if (train != null) const SizedBox(height: 20),
-        if (train != null) TrainConfigCard(config: train!),
+        if (train != null)
+          TrainConfigCard(
+            config: train!,
+            onToggleAreaClick: toggleUsedArea,
+            usedAreaIsVisible: showUsedArea,
+          ),
         if (train != null) const SizedBox(height: 20),
         if (train != null)
           ElevatedButton(

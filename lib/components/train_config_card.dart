@@ -3,8 +3,15 @@ import 'package:pegboard_trainer/app_styles.dart';
 import 'package:pegboard_trainer/model/train_config.dart';
 
 class TrainConfigCard extends StatelessWidget {
-  const TrainConfigCard({super.key, required this.config});
+  const TrainConfigCard(
+      {super.key,
+      required this.config,
+      this.onToggleAreaClick,
+      this.usedAreaIsVisible});
   final TrainConfig config;
+  final VoidCallback? onToggleAreaClick;
+  final bool? usedAreaIsVisible;
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -36,6 +43,18 @@ class TrainConfigCard extends StatelessWidget {
                     Text(
                       "${config.usedArea.bottomRight.x + 1} x ${config.usedArea.bottomRight.y + 1}",
                     ),
+                    if (onToggleAreaClick != null) const SizedBox(width: 10),
+                    if (onToggleAreaClick != null)
+                      ElevatedButton(
+                        onPressed: onToggleAreaClick,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: (usedAreaIsVisible ?? false)
+                              ? Color.fromARGB(255, 255, 17, 0)
+                              : Colors.black,
+                          foregroundColor: Colors.white,
+                        ),
+                        child: Text("toggle marking"),
+                      )
                   ],
                 ),
                 const Divider(),

@@ -15,6 +15,13 @@ class RectI {
     return RectI(topLeft.copy(), bottomRight.copy());
   }
 
+  bool containsVec(Vec2i vec2i) {
+    return vec2i.x >= topLeft.x &&
+        vec2i.x <= bottomRight.x &&
+        vec2i.y >= topLeft.y &&
+        vec2i.y <= bottomRight.y;
+  }
+
   // factory RectI.fromCenter(Vec2i center, int hWidth,int hHeight){
 
   // }
